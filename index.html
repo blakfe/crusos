@@ -1,209 +1,117 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Currículo - Felipe Rodrigues</title>
+    <title>YouTube Video and MP3 Downloader Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset de estilos */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background: rgb(0, 106, 26);
-            color: white;
-            line-height: 1.8;
-            padding: 10px;
+            font-family: 'Roboto', sans-serif;
         }
-
-        h1, h2 {
-            font-weight: bold;
-            color: #ffb86c;
-        }
-
-        h3 {
-            font-weight: normal;
-            color: #f8f8f2;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 10px;
-            z-index: 2;
-            position: relative;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        header .info {
-            font-size: 15px;
-        }
-
-        header .info a {
-            color: #ffb86c;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        header .info a:hover {
-            color: #f8f8f2;
-        }
-
-        .section-title {
-            border-bottom: 2px solid #ffb86c;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-
-        .skills ul {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .skills ul li {
-            background: #FFF1F62C;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .skills ul li:hover {
-            background: #ffb86c;
-            cursor: pointer;
-        }
-
-        .experience, .education {
-            margin-bottom: 10px;
-        }
-
-        .experience .job, .education .course {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: rgba(241, 255, 246, 0.1);
-            border-radius: 8px;
-        }
-
-        .experience .job h4, .education .course h4 {
-            color: #ffb86c;
-        }
-
-        .experience .job p, .education .course p {
-            color: #f8f8f2;
-        }
-
-        .contact-info {
-            font-size: 18px;
-            color: #f8f8f2;
-            margin-bottom: 10px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #f8f8f2;
-        }
-
-        footer a {
-            color: #ffb86c;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Estilos para o iframe */
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.0;
-        }
-
     </style>
 </head>
-<body>
-
-    <!-- Incorporação do vídeo do YouTube com a música "Deus, Eu Tenho Tantas Bênçãos" -->
-    <iframe src="https://www.youtube.com/embed/3DL6xo8PWww?autoplay=1&controls=0&loop=1&playlist=3DL6xo8PWww" 
-            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
-    <div class="container">
-        <header>
-            <div class="personal-info">
-                <h1>Felipe Rodrigues</h1>
-                <p>Bairro Esmerino Gomes, 62600-000, Itapajé-CE</p>
-            <div class="info">
-                <p>Email: <a href="mailto:felipecursos07@gmail.com">felipecursos07@gmail.com</a></p>
-                <p>Celular: (85) 99125-8335</p>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-4 border-b">
+                <h1 class="text-xl font-semibold">YouTube Downloader Chatbot</h1>
             </div>
-        </header>
-
-        <section>
-            <h2 class="section-title">Objetivo</h2>
-            <p>Atuar como Auxiliar Administrativo</p>
-        </section>
-
-        <section class="skills">
-            <h2 class="section-title">Habilidades</h2>
-            <ul>
-                <li>Photoshop CC 2022</li>
-                <li>Auxiliar de Professor Home Office</li>
-                <li>Word</li>
-                <li>Editor de Sites</li>
-                <li>Excel</li>
-                <li>PowerPoint</li>
-                <li>Gestão de Documentos/Arquivos</li>
-            </ul>
-        </section>
-
-        <section class="experience">
-            <h2 class="section-title">Formação Acadêmica</h2>
-            <div class="job">
-                <h4>Ensino Médio - EEM Monsenhor Catão Porfírio Sampaio</h4>
-                <p><strong>Fevereiro 2007 - Dezembro 2009</strong></p>
-                <p>Ensino Médio completo.</p>
+            <div id="chatbox" class="p-4 h-96 overflow-y-auto">
+                <!-- Chat messages will be appended here -->
             </div>
-            <div class="job">
-                <h4>Formação Complementar</h4>
-                <p><strong>Curso de Informática Básica - 250h</strong></p>
-                <p>Promovido pelo portal de cursos SÓ EDUCADOR e certificado pela faculdade FAMEC.</p>
+            <div class="p-4 border-t">
+                <form id="chat-form" class="flex">
+                    <input id="user-input" type="text" class="flex-grow p-2 border rounded-l-lg focus:outline-none" placeholder="Enter YouTube URL...">
+                    <button type="submit" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 focus:outline-none">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
             </div>
-            <div class="job">
-                <h4>Curso de Auxiliar Administrativo - 80h</h4>
-                <p><strong>Associação Brasileira de Educação a Distância (ABED)</strong></p>
-            </div>
-        </section>
-
-        <section class="education">
-            <h2 class="section-title">Resumo Profissional</h2>
-            <div class="course">
-                <p>Experiência na organização de documentos e controle financeiro. Expertise na emissão de notas fiscais, conciliação bancária, elaboração de relatórios gerenciais, gestão de contratos, logística de eventos e processamento de folha de pagamento. Habilidades também em atendimento ao cliente.</p>
-            </div>
-        </section>
-
-        <footer>
-            <p>&copy; 2024 Novembro  <a href=""></a>  <a href="" target="_blank"></a></p>
-        </footer>
+        </div>
     </div>
 
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        let currentUrl = '';
+
+        chatForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                appendMessage('user', userMessage);
+                userInput.value = '';
+                processUserMessage(userMessage);
+            }
+        });
+
+        function appendMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('mb-2', 'p-2', 'rounded-lg', 'max-w-xs');
+            if (sender === 'user') {
+                messageElement.classList.add('bg-blue-500', 'text-white', 'self-end');
+            } else {
+                messageElement.classList.add('bg-gray-200', 'text-gray-800', 'self-start');
+            }
+            messageElement.textContent = message;
+            chatbox.appendChild(messageElement);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function processUserMessage(userMessage) {
+            if (isValidYouTubeUrl(userMessage)) {
+                currentUrl = userMessage;
+                const botMessage = `Choose the format to download: 
+                1. Video
+                2. MP3`;
+                appendMessage('bot', botMessage);
+            } else if (userMessage === '1' && currentUrl) {
+                const botMessage = `Downloading video from: ${currentUrl}`;
+                appendMessage('bot', botMessage);
+                downloadVideo(currentUrl);
+            } else if (userMessage === '2' && currentUrl) {
+                const botMessage = `Downloading MP3 from: ${currentUrl}`;
+                appendMessage('bot', botMessage);
+                downloadMP3(currentUrl);
+            } else {
+                const botMessage = `Please enter a valid YouTube URL.`;
+                appendMessage('bot', botMessage);
+            }
+        }
+
+        function isValidYouTubeUrl(url) {
+            const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+            return regex.test(url);
+        }
+
+        function downloadVideo(url) {
+            // Simulate video download
+            setTimeout(() => {
+                const botMessage = `Video downloaded successfully from: ${url}`;
+                appendMessage('bot', botMessage);
+                // Simulate download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'video.mp4';
+                downloadLink.click();
+            }, 2000);
+        }
+
+        function downloadMP3(url) {
+            // Simulate MP3 download
+            setTimeout(() => {
+                const botMessage = `MP3 downloaded successfully from: ${url}`;
+                appendMessage('bot', botMessage);
+                // Simulate download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'audio.mp3';
+                downloadLink.click();
+            }, 2000);
+        }
+    </script>
 </body>
+</html>
