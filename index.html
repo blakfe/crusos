@@ -97,7 +97,7 @@
         .home-screen p, .products-screen p {
             font-size: 1.5em;
             color: #fff;
-        }
+         }
 
         button {
             padding: 10px 20px;
@@ -134,12 +134,6 @@
             width: 100%;
             border-radius: 10px;
         }
-
-        .go-back {
-            margin-top: 20px;
-            background-color: #FF4500;
-            padding: 10px 20px;
-        }
     </style>
 </head>
 <body>
@@ -153,7 +147,8 @@
       Just do it!
     </div>
 
-    <iframe id="background-music" width="0" height="0" src="https://www.youtube.com/embed/N_y8ITF2EpY?autoplay=1&loop=1&playlist=N_y8ITF2EpY" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+   <iframe id="background-music" width="0" height="0" src="https://www.youtube.com/embed/N_y8ITF2EpY?autoplay=1&loop=1&playlist=N_y8ITF2EpY" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+
 
     <div class="home-screen" id="home-screen">
         <h2>Bem-vindo</h2>
@@ -163,29 +158,44 @@
 
     <div class="products-screen" id="products-screen">
         <h2>Produtos Disponíveis</h2>
-        <div class="products-container">
-            <!-- Product Example -->
-            <div class="product">
-                <img src="https://via.placeholder.com/300x200" alt="Produto 1">
-                <p>Produto 1</p>
-                <p>Descrição do Produto 1</p>
-                <button>Comprar</button>
-            </div>
-            <div class="product">
-                <img src="https://via.placeholder.com/300x200" alt="Produto 2">
-                <p>Produto 2</p>
-                <p>Descrição do Produto 2</p>
-                <button>Comprar</button>
-            </div>
-            <div class="product">
-                <img src="https://via.placeholder.com/300x200" alt="Produto 3">
-                <p>Produto 3</p>
-                <p>Descrição do Produto 3</p>
-                <button>Comprar</button>
-            </div>
-        </div>
-        <button class="go-back" onclick="goBack()">Voltar</button>
+       <div class="products-container">
+    <div class="product">
+        <h3>INTERNET MÓVEL</h3>
+        <img src="https://i.ibb.co/ZN2b0gp/bgg.png" alt="Internet Móvel">
+        <p>Basta ter um chip TIM e pedir seu teste antes de comprar.</p>
+       <p class="product-price">R$16,99 mensal</p>
+        <button onclick="window.open('https://drive.google.com/file/d/1K1_y4H3b8j8R7HLzOHX7X5krMqh40X4h/view?usp=drive_link', '_blank')">BAIXAR</button>
     </div>
+    <div class="product">
+        <h3>CANAIS FILMES E SÉRIES</h3>
+        <img src="https://i.ibb.co/SB48nVX/iptv.png" alt="Canais Filmes e Séries">
+        <p>Mais de 5000 conteúdos na sua TV ou celular.</p>
+      <p class="product-price">R$35,99 mensal</p>
+        <button onclick="window.open('https://drive.google.com/file/d/1JsYIrjlphokz9_Uci8Y9qeZ1PxPy_wH2/view?usp=drive_link', '_blank')">BAIXAR</button>
+    </div>
+    <div class="product">
+        <h3>CARTAZ E ESTAMPA DE BLUSA</h3>
+        <img src="https://mir-s3-cdn-cf.behance.net/projects/404/17c4c4195136719.Y3JvcCwxMTM0LDg4NiwxNDAsMA.png" alt="Cartaz e Estampa de Blusa">
+        <p>Criamos artes para seu evento, seja secular ou evangélico, e estampas para camisas.</p>
+      <p class="product-price">VALORES A COMBINAR</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+    <div class="product">
+        <h3>EDIÇÃO DE SITES</h3>
+        <img src="https://intecssa.com/wp-content/uploads/2023/07/Que-estudiar-para-ser-Hacker.jpg" alt="Edição de Sites">
+        <p>Editamos sites ao seu gosto.</p>
+       <p class="product-price">R$149,99 mensal</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+    <div class="product">
+        <h3>OUTROS SERVIÇOS</h3>
+        <img src="https://t4.ftcdn.net/jpg/05/50/95/87/360_F_550958748_OeGcRonEUNoVhd0wjd9zSEMhLFIGO9Bt.jpg" alt="Outros Serviços">
+        <p>Entre em contato para saber mais sobre os serviços que oferecemos.</p>
+       <p class="product-price">VALORES A COMBINAR</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+</div>
+
 
     <script>
         const messages = [
