@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mortal Kombat 11 - Tela de Loading</title>
+    <title>lojinha do lipe😀</title>
     <style>
         body {
             margin: 0;
@@ -12,7 +12,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: url('https://assets.nintendo.com/image/upload/q_auto/f_auto/ncom/software/switch/70010000065791/146a2af756a756f16ba487e53565c376814113fad5568b1311f40552c2ff0a89') no-repeat center center fixed;
+            background: url('https://img.freepik.com/free-photo/anime-characters-celebrating-christmas_23-2150970395.jpg') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
             font-family: 'Arial', sans-serif;
@@ -31,7 +31,7 @@
         }
 
         h1 {
-            font-size: 4em;
+            font-size: 3em;
             text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
             z-index: 2;
         }
@@ -82,15 +82,16 @@
             display: none;
             text-align: center;
             z-index: 2;
-            background: url('https://assets.nintendo.com/image/upload/q_auto/f_auto/ncom/software/switch/70010000065791/146a2af756a756f16ba487e53565c376814113fad5568b1311f40552c2ff0a89') no-repeat center center fixed;
+            background: url('https://img.freepik.com/free-photo/anime-characters-celebrating-christmas_23-2150970395.jpg') no-repeat center center fixed;
             background-size: cover;
             height: 100vh;
             color: #fff;
+            overflow: hidden;
         }
 
         .home-screen h2, .products-screen h2 {
-            font-size: 3em;
-            color: #FFD700;
+            font-size: 2em;
+            color: #16acc7;
         }
 
         .home-screen p, .products-screen p {
@@ -110,13 +111,27 @@
         }
 
         button:hover {
-            background-color: #FFD700;
+            background-color: #16acc7;
+        }
+
+        .products-container {
+            max-height: 60vh; /* Limita a altura para permitir rolagem */
+            overflow-y: auto; /* Permite rolagem vertical */
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(23, 23, 23);
+            border-radius: 10px;
         }
 
         .product {
-            margin: 20px;
+            margin: 10px 0;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(9, 13, 9);
+            border-radius: 10px;
+        }
+
+        .product img {
+            width: 100%;
             border-radius: 10px;
         }
     </style>
@@ -125,50 +140,71 @@
     <div class="overlay"></div>
     <h1>loja lipe</h1>
     <div class="loading-bar">
-        <div class="loading" id ="loading"></div>
+        <div class="loading" id="loading"></div>
         <div class="percentage" id="percentage">0%</div>
     </div>
     <div class="message" id="message">
-        A luta está prestes a começar!
+      Just do it!
     </div>
 
-    <audio id="background-music" loop>
-        <source src="sua-musica.mp3" type="audio/mpeg">
-        Seu navegador não suporta o elemento de áudio.
-    </audio>
+   <audio id="background-music" loop>
+    <source src="https://api.soundcloud.com/tracks/165964368/stream?https://soundcloud.com/uma-nova-historia" type="audio/mp3">
+    Seu navegador não suporta o elemento de áudio.
+</audio>
 
     <div class="home-screen" id="home-screen">
         <h2>Bem-vindo</h2>
-        <p>Escolha seu produto e seja feliz!</p>
-        <button onclick="showProducts()">Começar Jogo</button>
+        <p>Escolha seus produtos ou serviços e seja feliz!</p>
+        <button onclick="start()">iniciar</button>
     </div>
 
     <div class="products-screen" id="products-screen">
         <h2>Produtos Disponíveis</h2>
-        <div class="product">
-            <h3>Produto 1</h3>
-            <p>Descrição do Produto 1</p>
-            <button onclick="buyProduct('Produto 1')">Comprar</button>
-        </div>
-        <div class="product">
-            <h3>Produto 2</h3>
-            <p>Descrição do Produto 2</p>
-            <button onclick="buyProduct('Produto 2')">Comprar</button>
-        </div>
-        <div class="product">
-            <h3>Produto 3</h3>
-            <p>Descrição do Produto 3</p>
-            <button onclick="buyProduct('Produto 3')">Comprar</button>
-        </div>
-        <button onclick="goBack()">Voltar</button>
+       <div class="products-container">
+    <div class="product">
+        <h3>INTERNET MÓVEL</h3>
+        <img src="https://i.ibb.co/ZN2b0gp/bgg.png" alt="Internet Móvel">
+        <p>Basta ter um chip TIM e pedir seu teste antes de comprar.</p>
+       <p class="product-price">R$16,99 mensal</p>
+        <button onclick="window.open('https://drive.google.com/file/d/1K1_y4H3b8j8R7HLzOHX7X5krMqh40X4h/view?usp=drive_link', '_blank')">BAIXAR</button>
     </div>
+    <div class="product">
+        <h3>CANAIS FILMES E SÉRIES</h3>
+        <img src="https://i.ibb.co/SB48nVX/iptv.png" alt="Canais Filmes e Séries">
+        <p>Mais de 5000 conteúdos na sua TV ou celular.</p>
+      <p class="product-price">R$35,99 mensal</p>
+        <button onclick="window.open('https://drive.google.com/file/d/1JsYIrjlphokz9_Uci8Y9qeZ1PxPy_wH2/view?usp=drive_link', '_blank')">BAIXAR</button>
+    </div>
+    <div class="product">
+        <h3>CARTAZ E ESTAMPA DE BLUSA</h3>
+        <img src="https://mir-s3-cdn-cf.behance.net/projects/404/17c4c4195136719.Y3JvcCwxMTM0LDg4NiwxNDAsMA.png" alt="Cartaz e Estampa de Blusa">
+        <p>Criamos artes para seu evento, seja secular ou evangélico, e estampas para camisas.</p>
+      <p class="product-price">VALORES A COMBINAR</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+    <div class="product">
+        <h3>EDIÇÃO DE SITES</h3>
+        <img src="https://intecssa.com/wp-content/uploads/2023/07/Que-estudiar-para-ser-Hacker.jpg" alt="Edição de Sites">
+        <p>Editamos sites ao seu gosto.</p>
+       <p class="product-price">R$149,99 mensal</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+    <div class="product">
+        <h3>OUTROS SERVIÇOS</h3>
+        <img src="https://t4.ftcdn.net/jpg/05/50/95/87/360_F_550958748_OeGcRonEUNoVhd0wjd9zSEMhLFIGO9Bt.jpg" alt="Outros Serviços">
+        <p>Entre em contato para saber mais sobre os serviços que oferecemos.</p>
+       <p class="product-price">VALORES A COMBINAR</p>
+        <button onclick="window.open('https://wa.me/558591258335', '_blank')">CONTATO</button>
+    </div>
+</div>
+
 
     <script>
         const messages = [
-            "A luta está prestes a começar!",
-            "Escolha seu destino!",
-            "Prepare seus combos!",
-            "A morte é apenas o começo!"
+            "loja de produtos e serviços digital!",
+            "promoção de fim de ano!",
+            "aproveite nossas oferta!",
+            "bora conferir😄!"
         ];
 
         let index = 0;
@@ -181,7 +217,6 @@
         let progress = 0;
 
         const audio = document.getElementById('background-music');
-        audio.play();
 
         const interval = setInterval(() => {
             progress++;
@@ -204,15 +239,14 @@
             messageElement.textContent = messages[index];
         }, 3000);
 
-        function showProducts() {
+        function start() {
+            audio.volume = 0.50; // Diminui o volume da música
+            audio.play(); // Toca a música de fundo
             homeScreenElement.style.display = 'none';
             productsScreenElement.style.display = 'block';
         }
 
-        function buyProduct(productName) {
-            alert(`Você comprou ${productName}!`);
-        }
-
+ 
         function goBack() {
             productsScreenElement.style.display = 'none';
             homeScreenElement.style.display = 'block';
