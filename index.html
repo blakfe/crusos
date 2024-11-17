@@ -84,7 +84,7 @@
             z-index: 2;
             background: url('https://img.freepik.com/free-photo/anime-characters-celebrating-christmas_23-2150970395.jpg') no-repeat center center fixed;
             background-size: cover;
-            height: 80vh;
+            height: 100vh;
             color: #fff;
             overflow: hidden;
         }
@@ -117,8 +117,8 @@
         .products-container {
             max-height: 60vh; /* Limita a altura para permitir rolagem */
             overflow-y: auto; /* Permite rolagem vertical */
-            margin: 10px auto;
-            padding: 10px;
+            margin: 20px auto;
+            padding: 20px;
             background: rgba(23, 23, 23);
             border-radius: 10px;
         }
@@ -147,10 +147,8 @@
       Just do it!
     </div>
 
-   <audio id="background-music" loop>
-    <source src="https://api.soundcloud.com/tracks/165964368/stream?https://soundcloud.com/uma-nova-historia" type="audio/mp3">
-    Seu navegador não suporta o elemento de áudio.
-</audio>
+   <iframe id="background-music" width="0" height="0" src="https://www.youtube.com/embed/N_y8ITF2EpY?autoplay=1&loop=1&playlist=N_y8ITF2EpY" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+
 
     <div class="home-screen" id="home-screen">
         <h2>Bem-vindo</h2>
@@ -240,17 +238,18 @@
         }, 3000);
 
         function start() {
-            audio.volume = 0.50; // Diminui o volume da música
-            audio.play(); // Toca a música de fundo
-            homeScreenElement.style.display = 'none';
-            productsScreenElement.style.display = 'block';
+        audio.volume = 0.40; // Diminui o volume da música ao apertar iniciar
+        if (audio.paused) {
+            audio.play(); // Toca a música de fundo se ainda não estiver tocando
         }
+        homeScreenElement.style.display = 'none';
+        productsScreenElement.style.display = 'block';
+    }
 
- 
-        function goBack() {
-            productsScreenElement.style.display = 'none';
-            homeScreenElement.style.display = 'block';
-        }
-    </script>
+    function goBack() {
+        productsScreenElement.style.display = 'none';
+        homeScreenElement.style.display = 'block';
+    }
+</script>
 </body>
 </html>
