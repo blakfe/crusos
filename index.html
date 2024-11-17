@@ -1,86 +1,222 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y2Mate Clone</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Mortal Kombat 11 - Tela de Loading</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('https://assets.nintendo.com/image/upload/q_auto/f_auto/ncom/software/switch/70010000065791/146a2af756a756f16ba487e53565c376814113fad5568b1311f40552c2ff0a89') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4em;
+            text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7);
+            z-index: 2;
+        }
+
+        .loading-bar {
+            width: 80%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px;
+            z-index: 2;
+        }
+
+        .loading {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #FF0000, #FFD700);
+            border-radius: 15px;
+            transition: width 0.1s ease;
+        }
+
+        .percentage {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: #FFD700;
+            top: 0;
+            line-height: 30px;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            text-align: center;
+            animation: fade 3s infinite;
+            z-index: 2;
+        }
+
+        @keyframes fade {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .home-screen, .products-screen {
+            display: none;
+            text-align: center;
+            z-index: 2;
+            background: url('https://assets.nintendo.com/image/upload/q_auto/f_auto/ncom/software/switch/70010000065791/146a2af756a756f16ba487e53565c376814113fad5568b1311f40552c2ff0a89') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .home-screen h2, .products-screen h2 {
+            font-size: 3em;
+            color: #FFD700;
+        }
+
+        .home-screen p, .products-screen p {
+            font-size: 1.5em;
+            color: #fff;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #FF0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FFD700;
+        }
+
+        .product {
+            margin: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-red-600 text-white py-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Y2Mate Clone</h1>
-            <nav>
-                <ul class="flex space-x-4">
-                    <li><a href="#" class="hover:underline">Home</a></li>
-                    <li><a href="#" class="hover:underline">About</a></li>
-                    <li><a href="#" class="hover:underline">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<body>
+    <div class="overlay"></div>
+    <h1>loja lipe</h1>
+    <div class="loading-bar">
+        <div class="loading" id ="loading"></div>
+        <div class="percentage" id="percentage">0%</div>
+    </div>
+    <div class="message" id="message">
+        A luta está prestes a começar!
+    </div>
 
-    <main class="container mx-auto py-10">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold mb-4">Download YouTube Videos</h2>
-            <p class="text-lg text-gray-700">Convert and download YouTube videos in MP3, MP4, and more formats for free.</p>
-        </div>
+    <audio id="background-music" loop>
+        <source src="sua-musica.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
 
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <form id="downloadForm">
-                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                        <input type="text" id="videoUrl" class="w-full px-4 py-2 text-gray-700 focus:outline-none" placeholder="Paste YouTube link here...">
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 hover:bg-red-700 focus:outline-none">Start</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div class="home-screen" id="home-screen">
+        <h2>Bem-vindo</h2>
+        <p>Escolha seu produto e seja feliz!</p>
+        <button onclick="showProducts()">Começar Jogo</button>
+    </div>
 
-        <div class="mt-10">
-            <h3 class="text-2xl font-bold mb-4">How to Download?</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                    <i class="fas fa-link text-red-600 text-4xl mb-4"></i>
-                    <h4 class="text-xl font-bold mb-2">1. Paste URL</h4>
-                    <p class="text-gray-700">Copy the YouTube video URL and paste it in the input box above.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                    <i class="fas fa-cogs text-red-600 text-4xl mb-4"></i>
-                    <h4 class="text-xl font-bold mb-2">2. Choose Format</h4>
-                    <p class="text-gray-700">Select the format (MP3, MP4, etc.) you want to download.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                    <i class="fas fa-download text-red-600 text-4xl mb-4"></i>
-                    <h4 class="text-xl font-bold mb-2">3. Download</h4>
-                    <p class="text-gray-700">Click the download button to save the video to your device.</p>
-                </div>
-            </div>
+    <div class="products-screen" id="products-screen">
+        <h2>Produtos Disponíveis</h2>
+        <div class="product">
+            <h3>Produto 1</h3>
+            <p>Descrição do Produto 1</p>
+            <button onclick="buyProduct('Produto 1')">Comprar</button>
         </div>
-    </main>
-
-    <footer class="bg-gray-800 text-white py-6 mt-10">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2023 Y2Mate Clone. All rights reserved.</p>
+        <div class="product">
+            <h3>Produto 2</h3>
+            <p>Descrição do Produto 2</p>
+            <button onclick="buyProduct('Produto 2')">Comprar</button>
         </div>
-    </footer>
+        <div class="product">
+            <h3>Produto 3</h3>
+            <p>Descrição do Produto 3</p>
+            <button onclick="buyProduct('Produto 3')">Comprar</button>
+        </div>
+        <button onclick="goBack()">Voltar</button>
+    </div>
 
     <script>
-        document.getElementById('downloadForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const videoUrl = document.getElementById('videoUrl').value;
-            if (videoUrl) {
-                window.location.href = `/download?url=${encodeURIComponent(videoUrl)}`;
-            } else {
-                alert('Please enter a valid YouTube URL.');
+        const messages = [
+            "A luta está prestes a começar!",
+            "Escolha seu destino!",
+            "Prepare seus combos!",
+            "A morte é apenas o começo!"
+        ];
+
+        let index = 0;
+        const messageElement = document.getElementById('message');
+        const loadingElement = document.getElementById('loading');
+        const percentageElement = document.getElementById('percentage');
+        const homeScreenElement = document.getElementById('home-screen');
+        const productsScreenElement = document.getElementById('products-screen');
+        
+        let progress = 0;
+
+        const audio = document.getElementById('background-music');
+        audio.play();
+
+        const interval = setInterval(() => {
+            progress++;
+            loadingElement.style.width = progress + '%';
+            percentageElement.textContent = progress + '%';
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    document.querySelector('.overlay').style.display = 'none';
+                    document.querySelector('.loading-bar').style.display = 'none';
+                    document.querySelector('.message').style.display = 'none';
+                    homeScreenElement.style.display = 'block';
+                }, 2000);
             }
-        });
+        }, 100);
+
+        setInterval(() => {
+            index = (index + 1) % messages.length;
+            messageElement.textContent = messages[index];
+        }, 3000);
+
+        function showProducts() {
+            homeScreenElement.style.display = 'none';
+            productsScreenElement.style.display = 'block';
+        }
+
+        function buyProduct(productName) {
+            alert(`Você comprou ${productName}!`);
+        }
+
+        function goBack() {
+            productsScreenElement.style.display = 'none';
+            homeScreenElement.style.display = 'block';
+        }
     </script>
 </body>
 </html>
