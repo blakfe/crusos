@@ -1,208 +1,211 @@
-<html><head><base href="." target="_blank">
-<meta charset="UTF-8">
-<title>Corrida Espacial Multiplayer</title>
-<style>
-body { 
-    margin: 0;
-    overflow: hidden;
-    background: #000;
-    font-family: Arial, sans-serif;
-}
+<html><head><base href="." />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sala de Bate Papo Musical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-#gameCanvas {
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(to bottom, #000033, #000066);
-}
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            color: #fff;
+            height: 100vh;
+        }
 
-.ship {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    transition: all 0.1s;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.player1 {
-    background: red;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
+        .chat-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-.player2 {
-    background: blue;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
 
-.star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 1s infinite alternate;
-}
+        .message {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s ease-in;
+        }
 
-@keyframes twinkle {
-    from { opacity: 0.3; }
-    to { opacity: 1; }
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-#scoreBoard {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    color: white;
-    font-size: 24px;
-    z-index: 100;
-}
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
 
-.powerup {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: yellow;
-    border-radius: 50%;
-    animation: pulse 1s infinite;
-}
+        input, button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-</style>
+        input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .music-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .music-player {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .users-online {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🎵 Sala de Bate Papo Musical 🎵</h1>
+        <div class="users-online">
+            👥 Usuários online: <span id="user-count">1</span>
+        </div>
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="message">Bem-vindo à sala de bate-papo musical! 🎵</div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+        <div class="music-controls">
+            <div class="music-player">
+                <button onclick="toggleMusic()">▶️ Play/Pause</button>
+                <input type="range" id="volume" min="0" max="100" value="50">
+                <span>Volume</span>
+                <select id="music-select" onchange="changeSong()">
+                    <option value="ambient">Música Ambiente</option>
+                    <option value="jazz">Jazz Suave</option>
+                    <option value="lofi">Lo-Fi</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-<div id="scoreBoard">
-    Jogador 1: <span id="score1">0</span> | Jogador 2: <span id="score2">0</span>
-</div>
-<div id="gameCanvas"></div>
-
-<script>
-class Game {
-    constructor() {
-        this.canvas = document.getElementById('gameCanvas');
-        this.players = {
-            player1: {
-                element: this.createShip('player1'),
-                x: window.innerWidth * 0.25,
-                y: window.innerHeight - 100,
-                score: 0,
-                speed: 5
-            },
-            player2: {
-                element: this.createShip('player2'),
-                x: window.innerWidth * 0.75,
-                y: window.innerHeight - 100,
-                score: 0,
-                speed: 5
-            }
-        };
+    <script>
+        // Simular áudio
+        let isPlaying = false;
+        let currentTrack = 'ambient';
         
-        this.keys = {};
-        this.powerups = [];
-        this.setupControls();
-        this.createStars();
-        this.gameLoop();
-        this.spawnPowerups();
-    }
-
-    createShip(playerClass) {
-        const ship = document.createElement('div');
-        ship.className = `ship ${playerClass}`;
-        this.canvas.appendChild(ship);
-        return ship;
-    }
-
-    createStars() {
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = Math.random() * 3 + 'px';
-            star.style.height = star.style.width;
-            star.style.left = Math.random() * window.innerWidth + 'px';
-            star.style.top = Math.random() * window.innerHeight + 'px';
-            this.canvas.appendChild(star);
-        }
-    }
-
-    setupControls() {
-        window.addEventListener('keydown', (e) => this.keys[e.key] = true);
-        window.addEventListener('keyup', (e) => this.keys[e.key] = false);
-    }
-
-    movePlayer(player, left, right, up, down) {
-        if (this.keys[left]) player.x -= player.speed;
-        if (this.keys[right]) player.x += player.speed;
-        if (this.keys[up]) player.y -= player.speed;
-        if (this.keys[down]) player.y += player.speed;
-
-        // Boundaries
-        player.x = Math.max(0, Math.min(window.innerWidth - 40, player.x));
-        player.y = Math.max(0, Math.min(window.innerHeight - 40, player.y));
-
-        player.element.style.transform = `translate(${player.x}px, ${player.y}px)`;
-    }
-
-    spawnPowerups() {
-        setInterval(() => {
-            const powerup = document.createElement('div');
-            powerup.className = 'powerup';
-            powerup.style.left = Math.random() * (window.innerWidth - 20) + 'px';
-            powerup.style.top = Math.random() * (window.innerHeight - 20) + 'px';
-            this.canvas.appendChild(powerup);
-            this.powerups.push({
-                element: powerup,
-                x: parseInt(powerup.style.left),
-                y: parseInt(powerup.style.top)
-            });
-
-            setTimeout(() => {
-                if (powerup.parentNode) {
-                    powerup.parentNode.removeChild(powerup);
-                    this.powerups = this.powerups.filter(p => p.element !== powerup);
-                }
-            }, 5000);
-        }, 3000);
-    }
-
-    checkCollisions() {
-        this.powerups.forEach((powerup, index) => {
-            const checkCollision = (player) => {
-                const dx = (player.x + 20) - (powerup.x + 10);
-                const dy = (player.y + 20) - (powerup.y + 10);
-                const distance = Math.sqrt(dx * dx + dy * dy);
+        // Sistema de mensagens
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const messages = document.getElementById('messages');
+            
+            if (input.value.trim() !== '') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.textContent = `Você: ${input.value}`;
+                messages.appendChild(messageDiv);
                 
-                if (distance < 30) {
-                    player.speed += 2;
-                    player.score += 10;
-                    document.getElementById('score1').textContent = this.players.player1.score;
-                    document.getElementById('score2').textContent = this.players.player2.score;
-                    
-                    powerup.element.parentNode.removeChild(powerup.element);
-                    this.powerups.splice(index, 1);
+                // Simulação de resposta
+                setTimeout(() => {
+                    const response = document.createElement('div');
+                    response.className = 'message';
+                    response.textContent = `Bot: Legal! Você está curtindo a música? 🎵`;
+                    messages.appendChild(response);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
 
-                    setTimeout(() => {
-                        player.speed = Math.max(5, player.speed - 2);
-                    }, 3000);
-                }
-            };
+        // Controle de música
+        function toggleMusic() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                console.log('Música tocando:', currentTrack);
+            } else {
+                console.log('Música pausada');
+            }
+        }
 
-            checkCollision(this.players.player1);
-            checkCollision(this.players.player2);
+        function changeSong() {
+            currentTrack = document.getElementById('music-select').value;
+            console.log('Mudou para:', currentTrack);
+        }
+
+        // Controle de volume
+        document.getElementById('volume').addEventListener('input', (e) => {
+            console.log('Volume:', e.target.value);
         });
-    }
 
-    gameLoop() {
-        this.movePlayer(this.players.player1, 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown');
-        this.movePlayer(this.players.player2, 'a', 'd', 'w', 's');
-        this.checkCollisions();
-        requestAnimationFrame(() => this.gameLoop());
-    }
-}
+        // Enter para enviar mensagem
+        document.getElementById('message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
 
-// Start the game
-window.onload = () => {
-    new Game();
-    alert('Controles:\nJogador 1: Setas direcionais\nJogador 2: WASD\nColete os power-ups amarelos para aumentar sua velocidade e pontuação!');
-};
-</script>
+        // Simular usuários online
+        setInterval(() => {
+            const userCount = document.getElementById('user-count');
+            const currentCount = parseInt(userCount.textContent);
+            const change = Math.random() > 0.5 ? 1 : -1;
+            const newCount = Math.max(1, currentCount + change);
+            userCount.textContent = newCount;
+        }, 5000);
+
+        // Animação de digitação
+        let typingTimeout;
+        document.getElementById('message-input').addEventListener('input', () => {
+            clearTimeout(typingTimeout);
+            // Simular indicador de digitação
+            typingTimeout = setTimeout(() => {
+                console.log('Parou de digitar');
+            }, 500);
+        });
+    </script>
 </body></html>
