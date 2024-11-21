@@ -46,6 +46,13 @@
             animation: fadeIn 0.3s ease-in;
         }
 
+        .user-info {
+            padding: 10px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -56,7 +63,7 @@
             gap: 10px;
         }
 
-        input, button {
+        input, button, select {
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -106,16 +113,21 @@
 <body>
     <div class="container">
         <h1>🎵 Sala de Bate Papo Musical 🎵</h1>
+        <div class="user-info">
+            <input type="text" id="username" placeholder="Seu nome de usuário" />
+            <button onclick="joinChat()">Entrar no Chat</button>
+        </div>
         <div class="users-online">
-            👥 Usuários online: <span id="user-count">1</span>
+            👥 Usuários online: <span id="user-count">0</span>
+            <div id="online-users"></div>
         </div>
         <div class="chat-container">
             <div class="messages" id="messages">
                 <div class="message">Bem-vindo à sala de bate-papo musical! 🎵</div>
             </div>
             <div class="input-area">
-                <input type="text" id="message-input" placeholder="Digite sua mensagem...">
-                <button onclick="sendMessage()">Enviar</button>
+                <input type="text" id="message-input" placeholder="Digite sua mensagem..." disabled>
+                <button onclick="sendMessage()" id="send-button" disabled>Enviar</button>
             </div>
         </div>
         <div class="music-controls">
@@ -132,37 +144,64 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
     <script>
-        // Simular áudio
+        // Simulação de WebSocket para chat em tempo real
+        const users = new Set();
+        let username = '';
         let isPlaying = false;
         let currentTrack = 'ambient';
-        
-        // Sistema de mensagens
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const messages = document.getElementById('messages');
+
+        function joinChat() {
+            const usernameInput = document.getElementById('username');
+            username = usernameInput.value.trim();
             
-            if (input.value.trim() !== '') {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message';
-                messageDiv.textContent = `Você: ${input.value}`;
-                messages.appendChild(messageDiv);
+            if (username) {
+                users.add(username);
+                document.getElementById('message-input').disabled = false;
+                document.getElementById('send-button').disabled = false;
+                document.getElementById('username').disabled = true;
+                updateUserList();
                 
-                // Simulação de resposta
-                setTimeout(() => {
-                    const response = document.createElement('div');
-                    response.className = 'message';
-                    response.textContent = `Bot: Legal! Você está curtindo a música? 🎵`;
-                    messages.appendChild(response);
-                    messages.scrollTop = messages.scrollHeight;
-                }, 1000);
-                
-                input.value = '';
-                messages.scrollTop = messages.scrollHeight;
+                // Adiciona mensagem de boas-vindas
+                addMessage(`${username} entrou na sala`, 'sistema');
             }
         }
 
-        // Controle de música
+        function updateUserList() {
+            const userCount = document.getElementById('user-count');
+            const onlineUsers = document.getElementById('online-users');
+            userCount.textContent = users.size;
+            onlineUsers.innerHTML = Array.from(users).map(user => 
+                `<div>${user}</div>`
+            ).join('');
+        }
+
+        function addMessage(text, type = 'user') {
+            const messages = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            if (type === 'user') {
+                messageDiv.textContent = `${username}: ${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (text && username) {
+                addMessage(text);
+                input.value = '';
+            }
+        }
+
         function toggleMusic() {
             isPlaying = !isPlaying;
             if (isPlaying) {
@@ -174,38 +213,41 @@
 
         function changeSong() {
             currentTrack = document.getElementById('music-select').value;
-            console.log('Mudou para:', currentTrack);
+            if (isPlaying) {
+                console.log('Mudou para:', currentTrack);
+            }
         }
 
-        // Controle de volume
         document.getElementById('volume').addEventListener('input', (e) => {
             console.log('Volume:', e.target.value);
         });
 
-        // Enter para enviar mensagem
         document.getElementById('message-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        // Simular usuários online
+        // Simulação de usuários entrando e saindo
         setInterval(() => {
-            const userCount = document.getElementById('user-count');
-            const currentCount = parseInt(userCount.textContent);
-            const change = Math.random() > 0.5 ? 1 : -1;
-            const newCount = Math.max(1, currentCount + change);
-            userCount.textContent = newCount;
+            if (Math.random() > 0.7) {
+                const randomUser = `Usuario${Math.floor(Math.random() * 1000)}`;
+                if (!users.has(randomUser)) {
+                    users.add(randomUser);
+                    addMessage(`${randomUser} entrou na sala`, 'sistema');
+                    updateUserList();
+                }
+            }
+            if (Math.random() > 0.8 && users.size > 1) {
+                const userArray = Array.from(users);
+                const randomUser = userArray[Math.floor(Math.random() * userArray.length)];
+                if (randomUser !== username) {
+                    users.delete(randomUser);
+                    addMessage(`${randomUser} saiu da sala`, 'sistema');
+                    updateUserList();
+                }
+            }
         }, 5000);
 
-        // Animação de digitação
-        let typingTimeout;
-        document.getElementById('message-input').addEventListener('input', () => {
-            clearTimeout(typingTimeout);
-            // Simular indicador de digitação
-            typingTimeout = setTimeout(() => {
-                console.log('Parou de digitar');
-            }, 500);
-        });
     </script>
 </body></html>
