@@ -1,185 +1,51 @@
-<html><head><base href="." target="_blank">
-<meta charset="utf-8">
-<title>Sala de Chat Virtual 3D</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
-<style>
-body {
-    margin: 0;
-    overflow: hidden;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(45deg, #12123a, #2a1b3d);
-    color: white;
-}
-
-#chatContainer {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    height: 400px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
-#messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-.message {
-    margin: 5px 0;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    animation: messageIn 0.3s ease-out;
-}
-
-@keyframes messageIn {
-    from {
-        transform: translateX(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-#chatInput {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    outline: none;
-}
-
-#musicControls {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.play-button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.play-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat em Tempo Real</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        #messages { list-style-type: none; padding: 0; }
+        #messages li { padding: 8px; margin-bottom: 5px; background: #f4f4f4; border-radius: 5px; }
+        #form { display: flex; }
+        #input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        #send { padding: 10px 15px; border: none; background: #007BFF; color: #fff; border-radius: 5px; cursor: pointer; }
+        #send:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
+    <h1>Chat em Tempo Real</h1>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" placeholder="Digite uma mensagem..." />
+        <button id="send">Enviar</button>
+    </form>
 
-<div id="musicControls">
-    <button class="play-button" onclick="toggleMusic()">▶️ Play Music</button>
-</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-<div id="chatContainer">
-    <div id="messages"></div>
-    <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
-</div>
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
 
-<script>
-// Configuração do Three.js
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+        // Enviar mensagem ao servidor
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
 
-// Criando ambiente 3D
-const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-const material = new THREE.MeshPhongMaterial({
-    color: 0x00ff00,
-    wireframe: true
-});
-const torusKnot = new THREE.Mesh(geometry, material);
-scene.add(torusKnot);
-
-// Iluminação
-const light = new THREE.PointLight(0xffffff, 1, 100);
-light.position.set(10, 10, 10);
-scene.add(light);
-const ambientLight = new THREE.AmbientLight(0x404040);
-scene.add(ambientLight);
-
-camera.position.z = 30;
-
-// Animação
-function animate() {
-    requestAnimationFrame(animate);
-    torusKnot.rotation.x += 0.01;
-    torusKnot.rotation.y += 0.01;
-    renderer.render(scene, camera);
-}
-animate();
-
-// Sistema de chat
-const messages = document.getElementById('messages');
-const chatInput = document.getElementById('chatInput');
-const username = 'User' + Math.floor(Math.random() * 1000);
-
-// Simulando chat (em produção, use WebSocket/Socket.io real)
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && chatInput.value.trim()) {
-        addMessage(username, chatInput.value);
-        chatInput.value = '';
-    }
-});
-
-function addMessage(user, text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message';
-    messageDiv.textContent = `${user}: ${text}`;
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-}
-
-// Sistema de música
-let audio;
-
-function toggleMusic() {
-    if (!audio) {
-        audio = new Audio('https://soundimage.org/wp-content/uploads/2016/11/Cyberpunk-Moonlight-Sonata_v001.mp3');
-        audio.loop = true;
-    }
-    
-    if (audio.paused) {
-        audio.play();
-        document.querySelector('.play-button').textContent = '⏸️ Pause Music';
-    } else {
-        audio.pause();
-        document.querySelector('.play-button').textContent = '▶️ Play Music';
-    }
-}
-
-// Responsividade
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-</script>
-
+        // Receber mensagem do servidor
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
 </body>
 </html>
