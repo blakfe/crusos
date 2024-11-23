@@ -1,253 +1,185 @@
-<html><head><base href="." />
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sala de Bate Papo Musical</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<html><head><base href="." target="_blank">
+<meta charset="utf-8">
+<title>Sala de Chat Virtual 3D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(45deg, #12123a, #2a1b3d);
+    color: white;
+}
 
-        body {
-            background: linear-gradient(45deg, #1a1a2e, #16213e);
-            color: #fff;
-            height: 100vh;
-        }
+#chatContainer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
 
-        .chat-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            height: 70vh;
-            display: flex;
-            flex-direction: column;
-        }
+.message {
+    margin: 5px 0;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    animation: messageIn 0.3s ease-out;
+}
 
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-        }
+@keyframes messageIn {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
-        .message {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            animation: fadeIn 0.3s ease-in;
-        }
+#chatInput {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    outline: none;
+}
 
-        .user-info {
-            padding: 10px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-        }
+#musicControls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.play-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        .input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        input, button, select {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-        }
-
-        input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-
-        button {
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        .music-controls {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .music-player {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .users-online {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-        }
-    </style>
+.play-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎵 Sala de Bate Papo Musical 🎵</h1>
-        <div class="user-info">
-            <input type="text" id="username" placeholder="Seu nome de usuário" />
-            <button onclick="joinChat()">Entrar no Chat</button>
-        </div>
-        <div class="users-online">
-            👥 Usuários online: <span id="user-count">0</span>
-            <div id="online-users"></div>
-        </div>
-        <div class="chat-container">
-            <div class="messages" id="messages">
-                <div class="message">Bem-vindo à sala de bate-papo musical! 🎵</div>
-            </div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="Digite sua mensagem..." disabled>
-                <button onclick="sendMessage()" id="send-button" disabled>Enviar</button>
-            </div>
-        </div>
-        <div class="music-controls">
-            <div class="music-player">
-                <button onclick="toggleMusic()">▶️ Play/Pause</button>
-                <input type="range" id="volume" min="0" max="100" value="50">
-                <span>Volume</span>
-                <select id="music-select" onchange="changeSong()">
-                    <option value="ambient">Música Ambiente</option>
-                    <option value="jazz">Jazz Suave</option>
-                    <option value="lofi">Lo-Fi</option>
-                </select>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
-    <script>
-        // Simulação de WebSocket para chat em tempo real
-        const users = new Set();
-        let username = '';
-        let isPlaying = false;
-        let currentTrack = 'ambient';
+<div id="musicControls">
+    <button class="play-button" onclick="toggleMusic()">▶️ Play Music</button>
+</div>
 
-        function joinChat() {
-            const usernameInput = document.getElementById('username');
-            username = usernameInput.value.trim();
-            
-            if (username) {
-                users.add(username);
-                document.getElementById('message-input').disabled = false;
-                document.getElementById('send-button').disabled = false;
-                document.getElementById('username').disabled = true;
-                updateUserList();
-                
-                // Adiciona mensagem de boas-vindas
-                addMessage(`${username} entrou na sala`, 'sistema');
-            }
-        }
+<div id="chatContainer">
+    <div id="messages"></div>
+    <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
+</div>
 
-        function updateUserList() {
-            const userCount = document.getElementById('user-count');
-            const onlineUsers = document.getElementById('online-users');
-            userCount.textContent = users.size;
-            onlineUsers.innerHTML = Array.from(users).map(user => 
-                `<div>${user}</div>`
-            ).join('');
-        }
+<script>
+// Configuração do Three.js
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-        function addMessage(text, type = 'user') {
-            const messages = document.getElementById('messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message';
-            
-            if (type === 'user') {
-                messageDiv.textContent = `${username}: ${text}`;
-            } else {
-                messageDiv.textContent = text;
-            }
-            
-            messages.appendChild(messageDiv);
-            messages.scrollTop = messages.scrollHeight;
-        }
+// Criando ambiente 3D
+const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+const material = new THREE.MeshPhongMaterial({
+    color: 0x00ff00,
+    wireframe: true
+});
+const torusKnot = new THREE.Mesh(geometry, material);
+scene.add(torusKnot);
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-            
-            if (text && username) {
-                addMessage(text);
-                input.value = '';
-            }
-        }
+// Iluminação
+const light = new THREE.PointLight(0xffffff, 1, 100);
+light.position.set(10, 10, 10);
+scene.add(light);
+const ambientLight = new THREE.AmbientLight(0x404040);
+scene.add(ambientLight);
 
-        function toggleMusic() {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                console.log('Música tocando:', currentTrack);
-            } else {
-                console.log('Música pausada');
-            }
-        }
+camera.position.z = 30;
 
-        function changeSong() {
-            currentTrack = document.getElementById('music-select').value;
-            if (isPlaying) {
-                console.log('Mudou para:', currentTrack);
-            }
-        }
+// Animação
+function animate() {
+    requestAnimationFrame(animate);
+    torusKnot.rotation.x += 0.01;
+    torusKnot.rotation.y += 0.01;
+    renderer.render(scene, camera);
+}
+animate();
 
-        document.getElementById('volume').addEventListener('input', (e) => {
-            console.log('Volume:', e.target.value);
-        });
+// Sistema de chat
+const messages = document.getElementById('messages');
+const chatInput = document.getElementById('chatInput');
+const username = 'User' + Math.floor(Math.random() * 1000);
 
-        document.getElementById('message-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+// Simulando chat (em produção, use WebSocket/Socket.io real)
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && chatInput.value.trim()) {
+        addMessage(username, chatInput.value);
+        chatInput.value = '';
+    }
+});
 
-        // Simulação de usuários entrando e saindo
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                const randomUser = `Usuario${Math.floor(Math.random() * 1000)}`;
-                if (!users.has(randomUser)) {
-                    users.add(randomUser);
-                    addMessage(`${randomUser} entrou na sala`, 'sistema');
-                    updateUserList();
-                }
-            }
-            if (Math.random() > 0.8 && users.size > 1) {
-                const userArray = Array.from(users);
-                const randomUser = userArray[Math.floor(Math.random() * userArray.length)];
-                if (randomUser !== username) {
-                    users.delete(randomUser);
-                    addMessage(`${randomUser} saiu da sala`, 'sistema');
-                    updateUserList();
-                }
-            }
-        }, 5000);
+function addMessage(user, text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message';
+    messageDiv.textContent = `${user}: ${text}`;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+}
 
-    </script>
-</body></html>
+// Sistema de música
+let audio;
+
+function toggleMusic() {
+    if (!audio) {
+        audio = new Audio('https://soundimage.org/wp-content/uploads/2016/11/Cyberpunk-Moonlight-Sonata_v001.mp3');
+        audio.loop = true;
+    }
+    
+    if (audio.paused) {
+        audio.play();
+        document.querySelector('.play-button').textContent = '⏸️ Pause Music';
+    } else {
+        audio.pause();
+        document.querySelector('.play-button').textContent = '▶️ Play Music';
+    }
+}
+
+// Responsividade
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
