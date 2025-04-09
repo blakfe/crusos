@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎭 Quem é o Joio?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#6B21A8" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(() => {
+        console.log("✅ PWA ativo!");
+      });
+    }
+  </script>
+</head>
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen text-center p-6">
+  <h1 class="text-4xl font-bold mb-4">🎭 Quem é o Joio?</h1>
+  <p class="text-lg mb-6">Um jogo de mistério, criatividade e dedução!</p>
+  <a href="lobby.html" class="bg-purple-700 hover:bg-purple-900 text-white font-bold py-3 px-6 rounded shadow-xl">
+    ▶️ Jogar Agora
+  </a>
+  <footer class="mt-10 text-sm text-gray-500">
+    Desenvolvido por WePlay – PWA ativado ✅
+  </footer>
+</body>
+</html>
